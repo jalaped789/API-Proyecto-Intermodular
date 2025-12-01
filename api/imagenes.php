@@ -16,6 +16,17 @@ $controller = new ImagenController($db);
 $uuid = $_GET['uuid'] ?? null;
 $usuario = $_GET['usuario'] ?? null;
 
+// pagination params (page is 1-based)
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+$limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 10;
+
+// sanitize
+if ($page < 1) $page = 1;
+if ($limit < 1) $limit = 10;
+// hard cap to avoid huge queries
+$maxLimit = 100;
+if ($limit > $maxLimit) $limit = $maxLimit;
+
 // Detectar el método HTTP
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -25,9 +36,9 @@ if ($method === 'GET') {
     } elseif ($uuid) {
         $response = $controller->obtener($uuid);
     } elseif ($usuario) {
-        $response = $controller->listarConUsuario();
+        $response = $controller->listarConUsuario($page, $limit);
     } else {
-        $response = $controller->listar();
+        $response = $controller->listar($page, $limit);
     }
 }
 

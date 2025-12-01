@@ -17,14 +17,52 @@ class ImagenController
     // Métodos públicos ahora devuelven arrays
     // ========================================
 
-    public function listar(): array
+    public function listar(int $page = 1, int $limit = 10): array
     {
-        return $this->modelo->getImagenes();
+        if ($page < 1) $page = 1;
+        if ($limit < 1) $limit = 10;
+
+        $maxLimit = 100;
+        if ($limit > $maxLimit) $limit = $maxLimit;
+
+        $offset = ($page - 1) * $limit;
+
+        $data = $this->modelo->getImagenes($limit, $offset);
+        $total = $this->modelo->countImagenes();
+
+        return [
+            'data' => $data,
+            'meta' => [
+                'page' => $page,
+                'limit' => $limit,
+                'total' => $total,
+                'total_pages' => (int) ceil($total / $limit)
+            ]
+        ];
     }
 
-    public function listarConUsuario(): array
+    public function listarConUsuario(int $page = 1, int $limit = 10): array
     {
-        return $this->modelo->getImagenesConUsuario();
+        if ($page < 1) $page = 1;
+        if ($limit < 1) $limit = 10;
+
+        $maxLimit = 100;
+        if ($limit > $maxLimit) $limit = $maxLimit;
+
+        $offset = ($page - 1) * $limit;
+
+        $data = $this->modelo->getImagenesConUsuario($limit, $offset);
+        $total = $this->modelo->countImagenes();
+
+        return [
+            'data' => $data,
+            'meta' => [
+                'page' => $page,
+                'limit' => $limit,
+                'total' => $total,
+                'total_pages' => (int) ceil($total / $limit)
+            ]
+        ];
     }
 
     public function obtener($uuid): array
