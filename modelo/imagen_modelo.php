@@ -12,27 +12,67 @@ class Imagen
         $this->db = $db;
     }
 
-    public function getImagenes(): array
+    public function getImagenes(?int $limit = null, ?int $offset = null): array
     {
         $sql = "SELECT * FROM imagen";
+
+        if ($limit !== null) {
+            $sql .= " LIMIT :limit";
+            if ($offset !== null) {
+                $sql .= " OFFSET :offset";
+            }
+        }
+
         $stmt = $this->db->prepare($sql);
+
+        if ($limit !== null) {
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            if ($offset !== null) {
+                $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            }
+        }
+
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $stmt->execute();
 
         return $stmt->fetchAll();
     }
 
-    public function getImagenesConUsuario(): array
+    public function getImagenesConUsuario(?int $limit = null, ?int $offset = null): array
     {
         $sql = "SELECT i.*, u.username 
                 FROM imagen i 
                 LEFT JOIN usuario u ON i.usuario_id = u.id";
 
+        if ($limit !== null) {
+            $sql .= " LIMIT :limit";
+            if ($offset !== null) {
+                $sql .= " OFFSET :offset";
+            }
+        }
+
         $stmt = $this->db->prepare($sql);
+
+        if ($limit !== null) {
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            if ($offset !== null) {
+                $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            }
+        }
+
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $stmt->execute();
 
         return $stmt->fetchAll();
+    }
+
+    public function countImagenes(): int
+    {
+        $sql = "SELECT COUNT(*) AS c FROM imagen";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (int) ($row['c'] ?? 0);
     }
 
     public function getImagen(string $uuid): array
