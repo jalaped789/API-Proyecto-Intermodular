@@ -11,3 +11,9 @@ RewriteRule ^imagenes/usuario/?$ imagenes.php?usuario=1 [L,QSA]
 
 # 4️⃣ Listar todas las imágenes
 RewriteRule ^imagenes/?$ imagenes.php [L,QSA]
+
+# 5️⃣ Borrar imagen por UUID (DELETE)
+RewriteRule ^imagenes/borrar/([a-zA-Z0-9\-]+)/?$ imagenes.php?uuid=$1 [L,QSA]
+
+# 6️⃣ Login
+RewriteRule ^login login.php [L,QSA]

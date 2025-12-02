@@ -1,0 +1,19 @@
+{
+    "name": "api-proyecto-intermodular/api-proyecto-intermodular",
+    "description": "API para gestión de imágenes con JWT y roles de usuario",
+    "type": "project",
+    "require": {
+        "php": ">=8.0",
+        "firebase/php-jwt": "^6.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Modelo\\": "modelo/",
+            "Controlador\\": "controlador/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}
