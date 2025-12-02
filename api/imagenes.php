@@ -1,46 +1,80 @@
 <?php
-require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../database.php';
 require_once __DIR__ . '/../controlador/imagen_controlador.php';
 require_once __DIR__ . '/../modelo/imagen_modelo.php';
-
+require_once __DIR__ . '/../config/auth.php';
 
 use Controlador\ImagenController;
-use Modelo\Imagen;
 
 // Inicializar conexión
 $db = Database::getConnection();
 $controller = new ImagenController($db);
 
-// Obtener parámetros de la URL (enviados por .htaccess)
+// Obtener parámetros de la URL
 $uuid = $_GET['uuid'] ?? null;
-$usuario = $_GET['usuario'] ?? null;
+$usuarioParam = $_GET['usuario'] ?? null;
 
-// Detectar el método HTTP
+// Paginación
+$page = max(1, (int)($_GET['page'] ?? 1));
+$limit = min(100, max(1, (int)($_GET['limit'] ?? 10)));
+
+// Detectar método HTTP
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
-    if ($uuid && $usuario) {
+    // GET es público
+    if ($uuid && $usuarioParam) {
         $response = $controller->obtenerConUsuario($uuid);
     } elseif ($uuid) {
         $response = $controller->obtener($uuid);
-    } elseif ($usuario) {
-        $response = $controller->listarConUsuario();
+    } elseif ($usuarioParam) {
+        $response = $controller->listarConUsuario($page, $limit);
     } else {
-        $response = $controller->listar();
+        $response = $controller->listar($page, $limit);
     }
 }
 
 elseif ($method === 'POST') {
-    $response = $controller->crear();
+    // POST requiere al menos rol "usuario"
+    $usuario = obtenerUsuario();
+    if (!$usuario) {
+        http_response_code(401);
+        $response = ["error" => "Token requerido"];
+    } elseif (!usuarioTieneRol($usuario, ['usuario', 'admin'])) {
+        http_response_code(403);
+        $response = ["error" => "No tienes permiso para crear imágenes"];
+    } else {
+        $response = $controller->crear();
+    }
 }
 
 elseif ($method === 'PUT' && $uuid) {
-    $response = $controller->actualizar($uuid);
+    // PUT solo admin
+    $usuario = obtenerUsuario();
+    if (!$usuario) {
+        http_response_code(401);
+        $response = ["error" => "Token requerido"];
+    } elseif (!usuarioTieneRol($usuario, ['admin'])) {
+        http_response_code(403);
+        $response = ["error" => "Solo un admin puede modificar imágenes"];
+    } else {
+        $response = $controller->actualizar($uuid);
+    }
 }
 
 elseif ($method === 'DELETE' && $uuid) {
-    $response = $controller->eliminar($uuid);
+    // DELETE solo admin
+    $usuario = obtenerUsuario();
+    if (!$usuario) {
+        http_response_code(401);
+        $response = ["error" => "Token requerido"];
+    } elseif (!usuarioTieneRol($usuario, ['admin'])) {
+        http_response_code(403);
+        $response = ["error" => "Solo un admin puede eliminar imágenes"];
+    } else {
+        $response = $controller->eliminar($uuid);
+    }
 }
 
 else {
