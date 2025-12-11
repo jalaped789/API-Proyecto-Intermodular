@@ -18,12 +18,23 @@ $usuarioParam = $_GET['usuario'] ?? null;
 // Paginación
 $page = max(1, (int)($_GET['page'] ?? 1));
 $limit = min(100, max(1, (int)($_GET['limit'] ?? 10)));
+$search = $_GET['search'] ?? '';
+$sort = $_GET['sort'] ?? 'id';
+$order = strtoupper($_GET['order'] ?? 'ASC');
 
 // Detectar método HTTP
 $method = $_SERVER['REQUEST_METHOD'];
 
+//Exportar
+$export = $_GET['export'] ?? null;
+
 if ($method === 'GET') {
     // GET es público
+    if ($export) {
+        $controller->exportar(search:$search, sort:$sort, order:$order);
+        exit;
+    }
+
     if ($uuid && $usuarioParam) {
         $response = $controller->obtenerConUsuario($uuid);
     } elseif ($uuid) {
@@ -31,7 +42,7 @@ if ($method === 'GET') {
     } elseif ($usuarioParam) {
         $response = $controller->listarConUsuario($page, $limit);
     } else {
-        $response = $controller->listar($page, $limit);
+        $response = $controller->listar($page, $limit, $search, $sort, $order);
     }
 }
 
