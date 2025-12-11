@@ -1,13 +1,13 @@
 RewriteEngine On
 # IMAGENES
 # 1️⃣ Obtener imagen por UUID + incluir usuario
-RewriteRule ^imagenes/([a-zA-Z0-9\-]+)/usuario/?$ imagenes.php?uuid=$1&usuario=1 [L,QSA]
+RewriteRule ^imagenes/([a-zA-Z0-9\-]+)/?$ imagenes.php?uuid=$1 [L,QSA]
 
 # 2️⃣ Obtener imagen por UUID
 RewriteRule ^imagenes/([a-zA-Z0-9\-]+)/?$ imagenes.php?uuid=$1 [L,QSA]
 
 # 3️⃣ Listar imágenes con usuario
-RewriteRule ^imagenes/usuario/?$ imagenes.php?usuario=1 [L,QSA]
+RewriteRule ^imagenes/?$ imagenes.php [L,QSA]
 
 # 4️⃣ Listar todas las imágenes
 RewriteRule ^imagenes/?$ imagenes.php [L,QSA]

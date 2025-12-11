@@ -13,7 +13,6 @@ $controller = new ImagenController($db);
 
 // Obtener parámetros de la URL
 $uuid = $_GET['uuid'] ?? null;
-$usuarioParam = $_GET['usuario'] ?? null;
 
 // Paginación
 $page = max(1, (int)($_GET['page'] ?? 1));
@@ -21,6 +20,7 @@ $limit = min(100, max(1, (int)($_GET['limit'] ?? 10)));
 $search = $_GET['search'] ?? '';
 $sort = $_GET['sort'] ?? 'id';
 $order = strtoupper($_GET['order'] ?? 'ASC');
+$include = $_GET['include'] ?? null;
 
 // Detectar método HTTP
 $method = $_SERVER['REQUEST_METHOD'];
@@ -35,11 +35,11 @@ if ($method === 'GET') {
         exit;
     }
 
-    if ($uuid && $usuarioParam) {
+    if ($uuid && $include === 'usuario') {
         $response = $controller->obtenerConUsuario($uuid);
     } elseif ($uuid) {
         $response = $controller->obtener($uuid);
-    } elseif ($usuarioParam) {
+    } elseif ($include === 'usuario') {
         $response = $controller->listarConUsuario($page, $limit);
     } else {
         $response = $controller->listar($page, $limit, $search, $sort, $order);
