@@ -1,5 +1,5 @@
 RewriteEngine On
-
+# IMAGENES
 # 1️⃣ Obtener imagen por UUID + incluir usuario
 RewriteRule ^imagenes/([a-zA-Z0-9\-]+)/usuario/?$ imagenes.php?uuid=$1&usuario=1 [L,QSA]
 
@@ -20,3 +20,13 @@ RewriteRule ^login login.php [L,QSA]
 
 # 7️⃣ Exportar imágenes a CSV 
 RewriteRule ^exportar/?$ imagenes.php?export=csv [L,QSA]
+
+# USUARIOS
+# 8️⃣ Obtener usuario por ID
+RewriteRule ^usuarios/([0-9]+)/?$ usuarios.php?id=$1 [L,QSA]
+
+# 9️⃣ Listar todos los usuarios
+RewriteRule ^usuarios/?$ usuarios.php [L,QSA]
+
+# 1️⃣0️⃣ Borrar usuario por ID (DELETE)
+RewriteRule ^usuarios/borrar/([0-9]+)/?$ usuarios.php?id=$1 [L,QSA]
