@@ -17,8 +17,9 @@ class ImagenController
     // Métodos públicos ahora devuelven arrays
     // ========================================
 
-    public function listar(int $page = 1, int $limit = 10): array
+    public function listar(int $page = 1, int $limit = 10, string $search = '', string $sort = 'id', string $order = 'ASC'): array
     {
+        // Ajustar límites
         if ($page < 1) $page = 1;
         if ($limit < 1) $limit = 10;
 
@@ -27,7 +28,7 @@ class ImagenController
 
         $offset = ($page - 1) * $limit;
 
-        $data = $this->modelo->getImagenes($limit, $offset);
+        $data = $this->modelo->getImagenes($limit, $offset, $search, $sort, $order);
         $total = $this->modelo->countImagenes();
 
         return [
@@ -43,6 +44,7 @@ class ImagenController
 
     public function listarConUsuario(int $page = 1, int $limit = 10): array
     {
+        // Ajustar límites
         if ($page < 1) $page = 1;
         if ($limit < 1) $limit = 10;
 
@@ -138,5 +140,28 @@ class ImagenController
         } else {
             return ["error" => "No se pudo eliminar la imagen"];
         }
+    }
+
+    public function exportar(string $search = '', string $sort = 'id', string $order = 'ASC'): array
+    {
+        // Obtener datos con filtros
+        $data = $this->modelo->getImagenes(null, null, $search, $sort, $order);
+
+        if (empty($data)) {
+            return ["error" => "No hay imágenes para exportar"];
+        }
+
+        $output = fopen('php://output', 'w');
+        // Cabeceras
+        fputcsv($output, array_keys($data[0]));
+
+        // Datos
+        foreach ($data as $row) {
+            fputcsv($output, $row);
+        }
+        fclose($output);
+        return [
+            'success' => "Se han exportado " . count($data) . " imágenes"
+        ];
     }
 }

@@ -12,9 +12,9 @@ class Imagen
         $this->db = $db;
     }
 
-    public function getImagenes(?int $limit = null, ?int $offset = null): array
+    public function getImagenes(?int $limit = null, ?int $offset = null, string $search = '', string $sort = 'id', string $order = 'ASC'): array
     {
-        $sql = "SELECT * FROM imagen";
+        $sql = "SELECT * FROM imagen WHERE texto LIKE :search ORDER BY :sort :order";
 
         if ($limit !== null) {
             $sql .= " LIMIT :limit";
@@ -24,6 +24,9 @@ class Imagen
         }
 
         $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':search', '%' . $search . '%');
+        $stmt->bindValue(':sort', $sort);
+        $stmt->bindValue(':order', $order);
 
         if ($limit !== null) {
             $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);

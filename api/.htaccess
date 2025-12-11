@@ -17,3 +17,6 @@ RewriteRule ^imagenes/borrar/([a-zA-Z0-9\-]+)/?$ imagenes.php?uuid=$1 [L,QSA]
 
 # 6️⃣ Login
 RewriteRule ^login login.php [L,QSA]
+
+# 7️⃣ Exportar imágenes a CSV 
+RewriteRule ^exportar/?$ imagenes.php?export=csv [L,QSA]
