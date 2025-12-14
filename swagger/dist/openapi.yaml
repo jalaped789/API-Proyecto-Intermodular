@@ -194,6 +194,15 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: include
+          in: query
+          description: >
+            Incluir datos relacionados.
+            Valor soportado:
+              - usuario → incluye el username del usuario propietario de la imagen
+          schema:
+            type: string
+            example: usuario
       responses:
         '200':
           description: Imagen obtenida
