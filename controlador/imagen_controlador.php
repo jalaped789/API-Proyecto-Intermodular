@@ -152,7 +152,8 @@ class ImagenController
         }
 
         // Ruta al directorio padre del proyecto
-        $rutaArchivo = __DIR__ . './exports/../../imagenes_exportadas.csv';
+        $nombreArchivo = 'imagenes_exportadas_' . date('Y-m-d_H-i') . '.csv';
+        $rutaArchivo = __DIR__ . '../../storage/exports/' . $nombreArchivo;
 
         // Abrir archivo para escritura
         $output = fopen($rutaArchivo, 'w');
