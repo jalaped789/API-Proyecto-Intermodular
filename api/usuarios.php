@@ -55,7 +55,7 @@ elseif ($method === 'POST') {
     }
 }
 
-elseif ($method === 'PUT' && $uuid) {
+elseif ($method === 'PUT' && $id) {
     // PUT solo admin
     $usuario = obtenerUsuario();
     if (!$usuario) {
@@ -65,11 +65,11 @@ elseif ($method === 'PUT' && $uuid) {
         http_response_code(403);
         $response = ["error" => "Solo un admin puede modificar imágenes"];
     } else {
-        $response = $controller->actualizar($uuid);
+        $response = $controller->actualizar($id);
     }
 }
 
-elseif ($method === 'DELETE' && $uuid) {
+elseif ($method === 'DELETE' && $id) {
     // DELETE solo admin
     $usuario = obtenerUsuario();
     if (!$usuario) {
@@ -79,7 +79,7 @@ elseif ($method === 'DELETE' && $uuid) {
         http_response_code(403);
         $response = ["error" => "Solo un admin puede eliminar imágenes"];
     } else {
-        $response = $controller->eliminar($uuid);
+        $response = $controller->eliminar($id);
     }
 }
 

@@ -95,8 +95,8 @@ class Usuario
 
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password_hash', password_hash($password, PASSWORD_DEFAULT));
-        $stmt->bindParam(':nombre', $nombre);
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt->bindParam(':password_hash', $password_hash);        $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':apellidos', $apellidos);
         $stmt->bindParam(':foto_perfil', $foto_perfil);
         $stmt->bindParam(':descripcion', $descripcion);
@@ -123,7 +123,8 @@ class Usuario
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password_hash', password_hash($password, PASSWORD_DEFAULT));
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt->bindParam(':password_hash', $password_hash);
         $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':apellidos', $apellidos);
         $stmt->bindParam(':foto_perfil', $foto_perfil);
