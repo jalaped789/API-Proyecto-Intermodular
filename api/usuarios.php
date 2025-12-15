@@ -7,6 +7,11 @@ require_once __DIR__ . '/../config/auth.php';
 
 use Controlador\UsuarioController;
 
+//Cabezeras CORS
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
 // Inicializar conexión
 $db = Database::getConnection();
 $controller = new UsuarioController($db);
