@@ -151,7 +151,12 @@ class ImagenController
             return ["error" => "No hay imágenes para exportar"];
         }
 
-        $output = fopen('php://output', 'w');
+        // Ruta al directorio padre del proyecto
+        $rutaArchivo = __DIR__ . './exports/../../imagenes_exportadas.csv';
+
+        // Abrir archivo para escritura
+        $output = fopen($rutaArchivo, 'w');
+
         // Cabeceras
         fputcsv($output, array_keys($data[0]));
 
@@ -161,7 +166,8 @@ class ImagenController
         }
         fclose($output);
         return [
-            'success' => "Se han exportado " . count($data) . " imágenes"
+            'success' => "Se han exportado " . count($data) . " imágenes",
+            'ruta' => realpath($rutaArchivo)
         ];
     }
 }
